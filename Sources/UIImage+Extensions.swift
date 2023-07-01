@@ -39,6 +39,28 @@ extension UIImage {
     }
     return image
   }
+    
+    /**
+      Resizes the image with cgImage.
+
+      - Parameter scale: If this is 1, `newSize` is the size in pixels.
+    */
+    public func resizedImage(for size: CGSize) -> UIImage? {
+            let image = self.cgImage
+            let context = CGContext(data: nil,
+                                    width: Int(size.width),
+                                    height: Int(size.height),
+                                    bitsPerComponent: image!.bitsPerComponent,
+                                    bytesPerRow: Int(size.width),
+                                    space: image?.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)!,
+                                    bitmapInfo: image!.bitmapInfo.rawValue)
+            context?.interpolationQuality = .high
+            context?.draw(image!, in: CGRect(origin: .zero, size: size))
+
+            guard let scaledImage = context?.makeImage() else { return nil }
+
+            return UIImage(cgImage: scaledImage)
+        }
 
   /**
     Rotates the image around its center.

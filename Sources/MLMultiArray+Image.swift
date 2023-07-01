@@ -300,20 +300,50 @@ public func createCGImage(fromFloatArray features: MLMultiArray,
 import UIKit
 
 extension MLMultiArray {
-  public func image(min: Double = 0,
-                    max: Double = 255,
-                    channel: Int? = nil,
-                    axes: (Int, Int, Int)? = nil) -> UIImage? {
-    let cgImg = cgImage(min: min, max: max, channel: channel, axes: axes)
-    return cgImg.map { UIImage(cgImage: $0) }
-  }
+    public func image(min: Double = 0,
+                      max: Double = 255,
+                      channel: Int? = nil,
+                      axes: (Int, Int, Int)? = nil) -> UIImage? {
+        let cgImg = cgImage(min: min, max: max, channel: channel, axes: axes)
+        return cgImg.map { UIImage(cgImage: $0) }
+    }
 }
 
 public func createUIImage(fromFloatArray features: MLMultiArray,
                           min: Float = 0,
                           max: Float = 255) -> UIImage? {
-  let cgImg = createCGImage(fromFloatArray: features, min: min, max: max)
-  return cgImg.map { UIImage(cgImage: $0) }
+    let cgImg = createCGImage(fromFloatArray: features, min: min, max: max)
+    return cgImg.map { UIImage(cgImage: $0) }
+    
+    /**
+     Creates a new CGImage from an array of grayscale bytes.
+     */
+    @nonobjc public class func fromByteArrayGray(_ bytes: [UInt8],
+                                                 width: Int,
+                                                 height: Int) -> CGImage? {
+        return fromByteArray(bytes, width: width, height: height,
+                             bytesPerRow: width,
+                             colorSpace: CGColorSpaceCreateDeviceGray(),
+                             alphaInfo: .none)
+    }
+    
+    @nonobjc public  class func fromByteArray(_ bytes: [UInt8],
+                                      width: Int,
+                                      height: Int,
+                                      bytesPerRow: Int,
+                                      colorSpace: CGColorSpace,
+                                      alphaInfo: CGImageAlphaInfo) -> CGImage? {
+        return bytes.withUnsafeBytes { ptr in
+            let context = CGContext(data: UnsafeMutableRawPointer(mutating: ptr.baseAddress!),
+                                    width: width,
+                                    height: height,
+                                    bitsPerComponent: 8,
+                                    bytesPerRow: bytesPerRow,
+                                    space: colorSpace,
+                                    bitmapInfo: alphaInfo.rawValue)
+            return context?.makeImage()
+        }
+    }
 }
 
 #endif
