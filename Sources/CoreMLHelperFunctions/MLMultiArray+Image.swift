@@ -82,7 +82,7 @@ extension MLMultiArray {
     switch self.dataType {
     case .double:
       return _image(min: min, max: max, channel: channel, axes: axes)
-    case .float32:
+    case .float32,.float16:
       return _image(min: Float(min), max: Float(max), channel: channel, axes: axes)
     case .int32:
       return _image(min: Int32(min), max: Int32(max), channel: channel, axes: axes)
@@ -318,7 +318,7 @@ public func createUIImage(fromFloatArray features: MLMultiArray,
     /**
      Creates a new CGImage from an array of grayscale bytes.
      */
-    @nonobjc public class func fromByteArrayGray(_ bytes: [UInt8],
+     func fromByteArrayGray(_ bytes: [UInt8],
                                                  width: Int,
                                                  height: Int) -> CGImage? {
         return fromByteArray(bytes, width: width, height: height,
@@ -327,7 +327,7 @@ public func createUIImage(fromFloatArray features: MLMultiArray,
                              alphaInfo: .none)
     }
     
-    @nonobjc public  class func fromByteArray(_ bytes: [UInt8],
+      func fromByteArray(_ bytes: [UInt8],
                                       width: Int,
                                       height: Int,
                                       bytesPerRow: Int,

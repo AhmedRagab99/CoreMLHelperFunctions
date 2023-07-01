@@ -83,6 +83,7 @@ public func rotate90PixelBuffer(from srcPixelBuffer: CVPixelBuffer,
 
   This allocates a new destination pixel buffer that is Metal-compatible.
 */
+#if os(iOS)
 public func rotate90PixelBuffer(_ srcPixelBuffer: CVPixelBuffer, factor: UInt8) -> CVPixelBuffer? {
   var dstWidth = CVPixelBufferGetWidth(srcPixelBuffer)
   var dstHeight = CVPixelBufferGetHeight(srcPixelBuffer)
@@ -99,3 +100,5 @@ public func rotate90PixelBuffer(_ srcPixelBuffer: CVPixelBuffer, factor: UInt8) 
   }
   return dstPixelBuffer
 }
+#endif
+

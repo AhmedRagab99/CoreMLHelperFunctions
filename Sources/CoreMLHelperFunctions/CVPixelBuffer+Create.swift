@@ -23,6 +23,7 @@
 import Foundation
 import Accelerate
 
+#if os(iOS)
 fileprivate func metalCompatiblityAttributes() -> [String: Any] {
   let attributes: [String: Any] = [
     String(kCVPixelBufferMetalCompatibilityKey): true,
@@ -125,11 +126,15 @@ public extension CVPixelBuffer {
     var combinedAttributes: [String: Any] = [:]
 
     // Copy attachment attributes.
-    if let attachments = CVBufferGetAttachments(srcPixelBuffer, .shouldPropagate) as? [String: Any] {
-      for (key, value) in attachments {
-        combinedAttributes[key] = value
+      if #available(iOS 15.0, *) {
+          if let attachments = CVBufferCopyAttachments(srcPixelBuffer, .shouldPropagate) as? [String: Any] {
+              for (key, value) in attachments {
+                  combinedAttributes[key] = value
+              }
+          }
+      } else {
+         
       }
-    }
 
     // Add user attributes.
     combinedAttributes = combinedAttributes.merging(attributes) { $1 }
@@ -168,3 +173,4 @@ public extension CVPixelBuffer {
     return dstPixelBuffer
   }
 }
+#endif

@@ -24,6 +24,7 @@ import Foundation
 import Accelerate
 import CoreImage
 
+
 /**
   First crops the pixel buffer, then resizes it.
 
