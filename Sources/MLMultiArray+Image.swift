@@ -95,7 +95,7 @@ extension MLMultiArray {
     Helper function that allows us to use generics. The type of `min` and `max`
     is also the dataType of the MLMultiArray.
   */
-  private func _image<T: MultiArrayType>(min: T,
+  public func _image<T: MultiArrayType>(min: T,
                                          max: T,
                                          channel: Int?,
                                          axes: (Int, Int, Int)?) -> CGImage? {
